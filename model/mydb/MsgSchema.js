@@ -5,7 +5,7 @@ const MsgSchema = mongoose.Schema;
 var schema = new MsgSchema(
   {
     username: String,
-    messgea: String,
+    message: String,
     time: String,
   },
   {

@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang='zh-cn'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title></title>
+
+  <!-- Bootstrap -->
+  <link href='/css/bootstrap.css' rel='stylesheet'>
+
+  <!--[if lt IE 9]>
+      <script src='./js/html5shiv.min.js'></script>
+      <script src='./js/respond.min.js'></script>
+    <![endif]-->
+  <style>
+    body {
+      background-image: radial-gradient(#faf, #aff, #ffa, #feb, #bee, #ebe);
+    }
+
+    h1 {
+      background-image: -webkit-linear-gradient(top, red, blue);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .out-box {
+      width: 800px;
+      height: 600px;
+      margin: 0 auto;
+      padding: 0 50px;
+    }
+
+    .text-center h1 {
+      font-family: 楷体;
+    }
+
+    textarea {
+      resize: none;
+    }
+
+    .msgs {
+      position: relative;
+    }
+
+    .btn {
+      position: absolute;
+      top: 10px;
+      right: 0px;
+    }
+
+    .msg {
+      padding: 2px;
+      width: 100%;
+      height: 200px;
+      margin: 5px;
+      background-color: #E9FAFF;
+      border-radius: 15px;
+      padding: 10px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .m-left {
+      width: 75px;
+      height: 75px;
+      float: left;
+      margin-right: 10px;
+    }
+
+    .m-right {
+      width: calc(100% - 85px);
+      float: left;
+    }
+
+    .msg .title {
+      line-height: 2em;
+    }
+
+    .msg .title .name {
+      font-weight: bold;
+      font-size: 1.5em;
+      color: #337ab7;
+    }
+
+    .msg .title .time {
+      float: right;
+      margin-right: 20px;
+      color: #888;
+    }
+
+    .msg .con {
+      overflow-y: auto;
+      position: absolute;
+      /* right: -17px; */
+      bottom: 0;
+      left: 95px;
+      top: 35px;
+      background: transparent;
+    }
+
+    .con:hover {
+      right: 0;
+    }
+
+    .con pre {
+      line-height: 1.5em;
+      font-size: 1em;
+      width: 560px;
+      white-space: pre-wrap;
+    }
+
+    .avatar {
+      border-radius: 50%;
+      overflow: hidden;
+    }
+
+    .msg img {
+      width: 100%;
+    }
+
+    .sep {
+      border: 1px solid #bbb;
+    }
+
+    .operate {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+      /* width: 560px; */
+      border: 1px solid #bbb;
+      text-align: right;
+      margin-right: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="out-box">
+    <div class="text-center">
+      <h1>班级内部论坛</h1>
+    </div>
+    <div class="form-horizontal">
+      <div class="form-group">
+        <div class="col-xs-2 text-right">
+          <label class="control-label">姓名: </label>
+        </div>
+        <div class="col-xs-8">
+          <input type="text" class="form-control" id="username">
+        </div>
+      </div>
+      <div class="form-group">
+        <div class="col-xs-2 text-right">
+          <label class="control-label">留言: </label>
+        </div>
+        <div class="col-xs-8">
+          <textarea id="txt" class="form-control" rows="3" placeholder="发表留言,按Ctrl+Enter发送"></textarea>
+        </div>
+      </div>
+    </div>
+    <hr class="sep">
+    <div class="text-center">
+      <nav aria-label="Page navigation">
+        <ul class="pagination">
+          <li>
+            <a href="#" aria-label="Previous">
+              <span aria-hidden="true">&laquo;</span>
+            </a>
+          </li>
+          <li class="active"><a href="#">1</a></li>
+          <li><a href="#">2</a></li>
+          <li><a href="#">3</a></li>
+          <li><a href="#">4</a></li>
+          <li><a href="#">5</a></li>
+          <li>
+            <a href="#" aria-label="Next">
+              <span aria-hidden="true">&raquo;</span>
+            </a>
+          </li>
+        </ul>
+      </nav>
+    </div>
+    <div class="msgs">
+      <!-- 遍历服务器传递回来的数据 -->
+      <% for(var i=0;i<msgs.length;i++){ %>
+      <div class="msg">
+        <div class="m-left">
+          <div class="avatar">
+            <img src="/img/avatar.jpg">
+          </div>
+        </div>
+        <div class="m-right">
+          <div class="title text-left">
+            <span class="name"><%= msgs[i].username %></span>
+            <span class="time"><%= msgs[i].time %></span>
+          </div>
+          <div class="con">
+            <pre><%= msgs[i].message %></pre>
+          </div>
+          <div class="operate">
+            <a href="javascript:;" onclick="del('<%= msgs[i]._id %>')">删除</a>
+            <a href="javascript:;" onclick="update(this,'<%= msgs[i]._id %>')">修改</a>
+          </div>
+        </div>
+        <!-- <a href="javascript:;" onclick="del('<%= msgs[i]._id %>')" class="del glyphicon glyphicon-remove"></a> -->
+      </div>
+      <% } %>
+    </div>
+  </div>
+
+
+
+  <script src='/js/jquery.min.js'></script>
+  <script src='/js/bootstrap.js'></script>
+</body>
+<script>
+  var text = "";
+  // 发送请求
+  txt.addEventListener("keydown", function () {
+    if (event.keyCode == 13 && event.ctrlKey) {
+      $.ajax({
+        url: "http://localhost:4000/message/tijiao",
+        data: {
+          username: username.value,
+          message: this.value
+        },
+        success: function (r) {
+          // console.log(r);
+          if (r.status == 1) { // 留言失败
+            alert(r.msg);
+          } else { //留言成功,跳转到首页
+            location.href = "/"
+          }
+          // 无论成功还是失败,都清空文本框中的内容
+          txt.value = "";
+          username.value = "";
+        },
+        error(e) {
+          alert("服务器没有响应,发送失败");
+        }
+      })
+    }
+  })
+
+  // 删除留言
+  function del(id) {
+    // alert(id);
+    var f = confirm("确定要删除留言吗?")
+    // 点击确定,返回true,点击取消,返回false
+    if (f) { // 返回值为true,说明点击了确定
+      // 发送请求,删除数据
+      $.ajax({
+        url: "/message/del",
+        data: {
+          id: id
+        },
+        success: function (res) {
+          if (res.status == 1) {
+            altert("删除失败,稍后再试!");
+            return;
+          }
+          alert("删除成功");
+          // 跳转到首页的第一个页面
+          location.href = location.href;
+        }
+      })
+    }
+  }
+
+  // 修改留言 -1 点击修改,将留言的内容替换成文本框
+  function update(ele, id) {
+    // console.log($(event.target).parent().prev().find('pre').text());
+    var $con = $(ele).parent().prev();
+    text = $con.find("pre").text();
+    // 将con的内容替换成textarea
+    $t = $('<textarea class="form-control" rows="3" onblur="send(\'' + id + '\')"></textarea>');
+    // 创建JQuery对象
+    //设置textarea的placeholder属性(普通的写法无法换行)
+    $t.attr("placeholder", text);
+    // 将其放入到页面
+    $con.html($t[0]);
+    // 自动聚焦
+    $con.find("textarea").focus();
+  }
+
+  // 文本域失去焦点,发送请求
+  function send(id) {
+    // console.log(id);
+    // console.log(event.target.value);
+    // 获取文本域的值,并去除首尾空白
+    var val = event.target.value.trim();
+    var f = confirm("确认修改留言?");
+    var $con = $(event.target).parent();
+    if (val == "" || !f) { // 如果输入的是空字符串
+      // 将文本域替换为pre,还原原来的样子
+      $con.html('<pre>' + text + '</pre>');
+      return;
+    }
+    // 不是空字符串,并且点击了确定
+    // 提交的数据: 修改留言的内容,id
+    var message = event.target.value;
+    $.ajax({
+      url: "/message/update",
+      data: {
+        id: id,
+        message: message
+      },
+      success: function (res) {
+        if (res.status == 1) {
+          alert("修改失败");
+          return;
+        }
+        // 修改成功
+        alert(res.msg);
+        // location.href = location.href;
+        // 使用js修改页面
+        // 把原来文本域的地方替换成修改后的内容
+        $con.html('<pre>' + message + '</pre>');
+      }
+    })
+  }
+
+  
+</script>
+
+</html>

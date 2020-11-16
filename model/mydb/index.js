@@ -1,5 +1,6 @@
 // 主体文件, 负责增删改查及其他功能
 const mongoose = require("mongoose");
+const ObjectId = mongoose.Types.ObjectId;
 const config = require("./db.config.js");
 const url = config.url;
 const db = config.db;
@@ -35,6 +36,14 @@ function add(model, data, callback) {
  * @param {Function} callback  回调函数
  */
 function del(model, filter, callback) {
+  /* if (filter.hasOwnProperty("id") || filter.hasOwnProperty("_id")) {
+    // 取出id
+    var id = filter.id || fulter._id;
+    // 将id装换成objectid类型并放入filter中
+    filter._id = ObjectId(id);
+    // 删除filter对象中的属性id
+    delete filter.id;
+  } */
   model.deleteOne(filter, function (err) {
     callback(err);
   });
@@ -140,6 +149,15 @@ function getCount(model, callback) {
     callback(err, count);
   });
 }
+/**
+ *
+ * 根据给定的字符串获取对应的ObjectId
+ * @param {String} id
+ * @return {mongoose} id
+ */
+function getObjectId(id) {
+  return ObjectId(id);
+}
 
 module.exports = {
   add: add,
@@ -148,6 +166,7 @@ module.exports = {
   find: find,
   findAll: findAll,
   getCount: getCount,
+  getObjectId: getObjectId,
   User: require("./UserSchema.js"),
   Msg: require("./MsgSchema.js"),
 };
