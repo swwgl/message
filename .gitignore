@@ -1,0 +1,4 @@
+# 提交忽略以下几个文件夹的所有内容
+node_modules
+uploads
+avatars
