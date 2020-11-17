@@ -17,8 +17,25 @@ router.get("/show", function (req, res) {
       res.render("error", { msg: "" });
       return;
     }
-    // 没有出错,将数据传递给index
-    res.render("index", { msgs: docs });
+    // 获取数据的总条数
+    db.getCount(Message, function (err, count) {
+      // console.log(count);
+      if (err) {
+        console.log(err);
+        res.render("error", { msg: "获取数据失败" });
+        return;
+      }
+      // 通过count算出总页数
+      var pages = Math.ceil(count / 5);
+      // 没有出错,将数据传递给index
+      // 传递的数据:留言的数据docs,当前页面page,总页数pages
+      var data = {
+        msgs: docs,
+        page: page,
+        pages: pages,
+      };
+      res.render("index", data);
+    });
   });
 });
 // get /message/tijiao 发表留言
