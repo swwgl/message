@@ -27,14 +27,24 @@ router.get("/show", function (req, res) {
       }
       // 通过count算出总页数
       var pages = Math.ceil(count / 5);
-      // 没有出错,将数据传递给index
-      // 传递的数据:留言的数据docs,当前页面page,总页数pages
-      var data = {
-        msgs: docs,
-        page: page,
-        pages: pages,
-      };
-      res.render("index", data);
+      // 获取所有用户的信息
+      db.findAll(db.User, {}, function (err, users) {
+        if (err) {
+          console.log(err);
+          res.render("error", { msg: "获取数据失败" });
+          return;
+        }
+        // 没有出错,将数据传递给index
+        // 传递的数据:留言的数据docs,当前页面page,总页数pages,所有用户users,当前登录的用户名username
+        var data = {
+          msgs: docs,
+          page: page,
+          pages: pages,
+          users: users,
+          username: req.session.username,
+        };
+        res.render("index", data);
+      });
     });
   });
 });
@@ -45,6 +55,8 @@ router.get("/tijiao", function (req, res) {
   // res.send("success");
   // 获取参数
   var message = req.query;
+  // 添加登录的用户名
+  message.username = req.session.username;
   // 添加留言的时间
   message.time = sd.format(new Date());
   // 调用db的方法,保存到数据库中

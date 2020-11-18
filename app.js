@@ -4,23 +4,34 @@ const session = require("express-session");
 const app = express();
 
 app.listen(4000);
-
+// 设置视图模板引擎
 app.set("view engine", "ejs");
-
-app.use(express.static("./public"));
-// 获取post 提交的参数
-app.use(express.urlencoded({ extended: true }));
-
+// 调用session配置
 app.use(
   session({
     secret: "message",
     resave: false,
     saveUninitialized: false,
+    cookie: {
+      maxAge: 24 * 60 * 60 * 1000,
+    },
   })
 );
+// 设置post请求参数的解析
+app.use(express.urlencoded({ extended: true }));
+// 设置根目录
+app.use(express.static("./public"));
+// 设置登录验证拦截器
+app.use(route.checkisLogin);
 
 app.get("/", function (req, res) {
   // res.render("index");
+  // 判断是否已经登录(检查session有没有username)
+  // var username = req.session.username;
+  // if (!username) {
+  //   //没有session
+  //   res.render("login");
+  // }
   // 展示首页所有留言的信息
   res.redirect("/message/show?page=1");
 });
