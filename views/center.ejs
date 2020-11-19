@@ -10,6 +10,16 @@
   <!-- Bootstrap -->
   <link href='/css/bootstrap.css' rel='stylesheet'>
   <style>
+    body {
+      background-color: #505050;
+    }
+
+    h1 {
+      color: white;
+      font-size: 50px;
+      font-weight: bold;
+    }
+
     .box {
       display: flex;
       justify-content: center;
@@ -57,11 +67,15 @@
 </head>
 
 <body>
-  <h1 class="text-center">个人中心</h1>
+  <h1 class="text-center" color="white">个人中心</h1>
+  <div class="nav text-right">
+    <a href="/">返回首页</a>
+    <a href="/user/logout">退出登录</a>
+  </div>
   <div class="box">
     <div class="userinfo">
       <div class="left">
-        <img src="<%= user.avatar %>" width="100px" height="100px">
+        <a href="/user/upload"><img src="<%= user.avatar %>" width="100px" height="100px"></a>
       </div>
       <div class="right">
         <div class="username">
@@ -74,7 +88,7 @@
           <a href="javascript:;" onclick="mod(this,'<%= user.username %>')">修改昵称</a>
         </div>
         <div class="text-right">
-          <a href="">修改密码</a>
+          <a href="/user/changePwd">修改密码</a>
         </div>
       </div>
     </div>

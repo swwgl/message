@@ -21,6 +21,12 @@ app.use(
 app.use(express.urlencoded({ extended: true }));
 // 设置根目录
 app.use(express.static("./public"));
+app.use(express.static("./uploads"));
+app.use(express.static("./avatars"));
+
+// app.use(function (req, res) {
+//   res.render("cut");
+// });
 // 设置登录验证拦截器
 app.use(route.checkisLogin);
 

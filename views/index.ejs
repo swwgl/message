@@ -192,7 +192,6 @@
           <% } %>
           <li class="<%= page==pages?'disabled':'' %>">
             <span aria-hidden="true">&raquo;</span>
-
           </li>
         </ul>
       </nav>
@@ -241,7 +240,7 @@
   txt.addEventListener("keydown", function () {
     if (event.keyCode == 13 && event.ctrlKey) {
       $.ajax({
-        url: "http://localhost:4000/message/tijiao",
+        url: "/message/tijiao",
         data: {
           message: this.value
         },
@@ -276,7 +275,7 @@
         },
         success: function (res) {
           if (res.status == 1) {
-            altert("删除失败,稍后再试!");
+            alert("删除失败,稍后再试!");
             return;
           }
           alert("删除成功");

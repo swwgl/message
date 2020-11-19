@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang='zh-cn'>
+
+<head>
+  <meta charset='utf-8'>
+  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+  <meta name='viewport' content='width=device-width, initial-scale=1'>
+  <title></title>
+
+  <!-- Bootstrap -->
+  <link href='/css/bootstrap.css' rel='stylesheet'>
+
+  <!--[if lt IE 9]>
+      <script src='/js/html5shiv.min.js'></script>
+      <script src='/js/respond.min.js'></script>
+    <![endif]-->
+  <style>
+    body {
+      background-color: #ccc;
+    }
+
+    label {
+      font-size: 16px;
+    }
+
+    .row {
+      line-height: 40px;
+    }
+
+    .container {
+      margin-top: 50px;
+    }
+  </style>
+</head>
+
+<body>
+  <h1 class="text-center">修改密码</h1>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-2">
+        <label for="oldPwd">
+          请输入旧密码:
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <input type="text" id="oldPwd" class="form-control">
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-2">
+        <label for="pwd1">
+          请输入新密码:
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <input type="text" id="pwd1" class="form-control pwd">
+      </div>
+      <div class="col-sm-3">
+        <span></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-offset-2 col-sm-2">
+        <label for="pwd2">
+          请再次输入密码:
+        </label>
+      </div>
+      <div class="col-sm-4">
+        <input type="text" id="pwd2" class="form-control pwd">
+      </div>
+      <div class="col-sm-3">
+        <span></span>
+      </div>
+    </div>
+    <div class="row">
+      <div class="col-sm-12 text-center">
+        <button class="btn btn-success">修改</button>
+      </div>
+    </div>
+  </div>
+  </div>
+  <script src='/js/jquery.min.js'></script>
+  <script src='/js/bootstrap.js'></script>
+  <script>
+    var f = false; // 新密码是否一致
+    $(".pwd").on("input", function () {
+      $("span").html(""); // 清空提示语
+      // console.log(pwd1.value);
+      // console.log(pwd2.value);
+      var pwd1 = $('#pwd1').val().trim();
+      var pwd2 = $("#pwd2").val().trim();
+      if (pwd1.length < 6 || pwd1.length > 12) {
+        $("#pwd1").parent().next().children("span").html("密码长度为6-12位").css("color", "red");
+        f = false;
+        return;
+      }
+      if (pwd2.length < 6 || pwd2.length > 12) {
+        $("#pwd2").parent().next().children("span").html("密码长度为6-12位").css("color", "red");
+        f = false;
+        return;
+      }
+      if (pwd1 != pwd2) {
+        $("span").html("两次输入的密码不一致").css("color", "red");
+        f = false;
+        return;
+      }
+      f = true;
+    })
+
+    $("button").on("click", function () {
+      var oldPwd = $("#oldPwd").val().trim();
+      var newPwd = $("#pwd1").val().trim();
+      if (f) {
+        $.ajax({
+          url: "/user/changePwd",
+          method: "post",
+          data: {
+            password: newPwd,
+            oldPwd: oldPwd
+          },
+          success: function (result) {
+            if (result.status == 1) { // 旧密码错误
+              alert("旧密码错误,请重新输入");
+              $("input").val("");
+              $("#oldPwd").focus();
+              return;
+            }
+            // 修改失败或成功,弹窗提示后,跳回用户中心页面
+            alert(result.msg);
+            location.href = "/user/center";
+          }
+        })
+      }
+    })
+  </script>
+</body>
+
+</html>
