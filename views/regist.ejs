@@ -1,176 +1,240 @@
 <!DOCTYPE html>
 <html lang='zh-cn'>
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    <title></title>
 
-<head>
-  <meta charset='utf-8'>
-  <meta http-equiv='X-UA-Compatible' content='IE=edge'>
-  <meta name='viewport' content='width=device-width, initial-scale=1'>
-  <title></title>
+    <!-- Bootstrap -->
+    <link href='/css/bootstrap.css' rel='stylesheet'>
+    <style>
+      body{
+        background-image: url("/img/bg.jpg");
+        background-repeat: no-repeat;
+        background-size: cover;
+        color: white;
+      }
+      .box{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 400px;
+        background-color: rgba(180,180,180,0.3);
+        margin-top: 50px;
+      }
+      a{
+        color: yellow;
+      }
+      a:hover{
+        color: violet;
+      }
+      .form-horizontal{
+        width: 50%;
+      }
+      .col-sm-5{
+        padding-top: 12px;
+        font-size: 16px;
+      }
+      #inputbox{
+        position: relative;
+      }
+      #status{
+        position: absolute;
+        top: 4px;
+        right: 25px;
+        bottom: 5px;
+      }
+      .sp {
+        width: 24px;
+        height: 24px;
+        clear: both;
+        margin: 0 auto;
+      }
+      /* Spinner Circle Rotation */
+      .sp-circle {
+        border: 4px rgba(0, 0, 0, 0.25) solid;
+        border-top: 4px black solid;
+        border-radius: 50%;
+        -webkit-animation: spCircRot .6s infinite linear;
+        animation: spCircRot .6s infinite linear;
+      }
 
-  <!-- Bootstrap -->
-  <link href='/css/bootstrap.css' rel='stylesheet'>
-  <style>
-    .box {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      width: 100%;
-      height: 400px;
-      background-color: #aaa;
-      margin-top: 100px;
-    }
-
-    .form-horizontal {
-      width: 50%;
-    }
-
-    .col-sm-5 {
-      padding-top: 12px;
-      font-size: 16px;
-    }
-  </style>
-  <!--[if lt IE 9]>
+      @-webkit-keyframes spCircRot {
+        from {
+          -webkit-transform: rotate(0deg);
+        }
+        to {
+          -webkit-transform: rotate(359deg);
+        }
+      }
+      @keyframes spCircRot {
+        from {
+          transform: rotate(0deg);
+        }
+        to {
+          transform: rotate(359deg);
+        }
+      }
+      .red{
+        color: red;
+      }
+      .yellow{
+        color: yellow;
+      }
+      .success{
+        color:#5cb85c;
+      }
+    </style>
+    <!--[if lt IE 9]>
       <script src='/js/html5shiv.min.js'></script>
       <script src='/js/respond.min.js'></script>
     <![endif]-->
-</head>
-
-<body>
-  <h1 class="text-center">注册</h1>
-  <div class="box">
-    <div class="form-horizontal">
-      <div class="form-group">
-        <label for="username" class="col-sm-3 control-label">用户名:</label>
-        <div class="col-sm-6">
-          <input type="text" class="form-control" id="username" placeholder="6-12位,包含数字字母下划线,且只能字母开头">
+  </head>
+  <body>
+    <h1 class="text-center">注册</h1>
+    <div class="box">
+      <div class="form-horizontal">
+        <div class="form-group">
+          <label for="username" class="col-sm-3 control-label">用户名:</label>
+          <div class="col-sm-6" id="inputbox">
+            <input type="text" class="form-control" id="username" placeholder="6-12位数字字母下划线,数字不能开头">
+            <div id="status"></div>
+          </div>
+          <div class="col-sm-3 control-label">
+            <span>用户名不能为空</span>
+          </div>
         </div>
-        <div class="col-sm-3">
-          <span>用户名不能为空</span>
+        <div class="form-group">
+          <label for="password" class="col-sm-3 control-label">密码:</label>
+          <div class="col-sm-6">
+            <input type="password" class="form-control" id="password" placeholder="6-12位密码">
+          </div>
+          <div class="col-sm-3 control-label">
+            <span>密码不能为空</span>
+          </div>
         </div>
-      </div>
-      <div class="form-group">
-        <label for="password" class="col-sm-3 control-label">密码:</label>
-        <div class="col-sm-6">
-          <input type="password" class="form-control" id="password" placeholder="6-12位"">
-        </div>
-        <div class=" col-sm-3">
-          <span>密码不能为空</span>
-        </div>
-      </div>
-      <div class="form-group">
-        <div class="col-sm-offset-4 col-sm-2">
-          <button class="btn btn-primary">注册</button>
-        </div>
-        <div class="col-sm-offset-1 col-sm-5">
-          已有账号?点击<a href="/user/login">登录</a>
+        <div class="form-group">
+          <div class="col-sm-offset-4 col-sm-1">
+            <button class="btn btn-primary">注册</button>
+          </div>
+          <div class="col-sm-offset-1 col-sm-5">
+            已有账号?点击<a href="/user/login">登录</a>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-  <script src='/js/jquery.min.js'></script>
-  <script src='/js/bootstrap.js'></script>
-  <script>
-    var f_uname = false; // 开关,判定用户名是否可以发送
-    var f_upass = false; // 开关,判定密码是否可以发送
-    // 获取焦点时,清空提示语
-    $("#username").on('focus', function () {
-      // 开始输入用户名时,清空提示语
-      $("span").eq(0).html("");
-    })
-    // 给用户名输入框绑定监听事件,检查用户名是否可用
-    $("#username").on("blur", function () {
-      // 获取输入的值
-      var username = $(this).val().trim();
-      if (username == "") {
-        $("span").eq(0).html("用户名不能为空").css("color", "red");
-        f_uname = false;
-        return;
-      }
-      // 用户名格式: 包含字母数字下划线,且只能字母开头,6-12位
-      var reg = /[a-zA-Z]\w{5,11}/;
-      if (!reg.test(username)) {
-        $("span").eq(0).html("用户名不合法").css("color", "red");
-        f_uname = false;
-        return;
-      }
-      // 用户名符合条件,发送请求验证是否已经存在
-      $.ajax({
-        url: "/user/check",
-        method: "post",
-        data: {
-          username: username
-        },
-        success: function (result) {
-          if (result.status == 2) {
-            alert(result.msg);
-            f_uname = false;
-            return;
-          }
-          if (result.status == 1) { //已存在
-            $("span").eq(0).html(result.msg).css("color", "red");
-            f_uname = false;
-            return;
-          }
-          // 可以使用,去掉提示语,修改开关
-          $("span").eq(0).html("");
-          f_uname = true;
+    <script src='/js/jquery.min.js'></script>
+    <script src='/js/bootstrap.js'></script>
+    <script>
+      var f_uname = false;//开关,判定用户名是否可以发送
+      var f_pass = false;//开关,判定密码是否可以发送
+      var loading = true;
+      // 获得焦点时,清空提示语
+      $("#username").on("focus",function(){
+        $("span").eq(0).html("");
+      });
+      // 给用户名输入框绑定监听事件,检查用户名是否可用
+      $("#username").on("blur",function(){
+        $("#status").removeClass().addClass("sp sp-circle");
+        // 获取输入的值
+        var username = $(this).val().trim();
+        if(username==""){
+          $("span").eq(0).html("用户名不能为空").css("color","red");
+          f_uname = false;
+          $("#status").removeClass().addClass("glyphicon glyphicon-warning-sign yellow");
+          return ;
         }
-      })
-    })
-    // 验证密码 6-12位
-    $("#password").on("input", function () {
-      var password = $(this).val().trim();
-      if (password == "") {
-        $('span').eq(1).html("密码不能为空").css("color", "red");
-        f_upass = false;
-        return;
-      }
-      if (password.length < 6 || password.length > 12) {
-        $("span").eq(1).html("密码长度不正确").css("color", "red");
-        f_upass = false;
-        return;
-      }
-      // 密码可以使用
-      $("span").eq(1).html(""); // 清空提示语
-      f_upass = true;
-    })
+        // 用户名格式:包含字母数字下划线,且只能字母开头,6-12位
+        var reg = /^[a-zA-Z]\w{5,11}$/;
+        if(!reg.test(username)){
+          $("span").eq(0).html("用户名不合法").css("color","red");
+          f_uname = false;
+          return ;
+        }
+        // 用户名符合条件,发送请求验证是否已经存在
+        // setTimeout(()=>{
 
-    // 给按钮绑定单击事件,提交注册请求
-    $("button").on("click", function () {
-      if (f_uname && f_upass) {
-        var username = $("#username").val();
-        var password = $("#password").val();
         $.ajax({
-          url: '/user/regist',
-          method: 'post',
+          url: "/user/check",
+          method: "post",
           data: {
-            username: username,
-            password: password
+            username: username
           },
-          success: function (result) {
-            if (result.status != 0) { // 注册失败
+          success: function(result){
+            $("#status").removeClass();
+            if(result.status==2){ // 网络问题,弹窗提示
               alert(result.msg);
-              return;
+              f_uname = false;
+              $("#status").addClass("glyphicon glyphicon-warning-sign yellow");
+              return ;
             }
-            // 注册成功
-            alert(result.msg);
-            location.href = "/"; // 跳转到首页
+            if(result.status==1){// 已存在
+              $("span").eq(0).html(result.msg).css("color","red");
+              f_uname = false;
+              $("#status").addClass("glyphicon glyphicon-remove red");
+              return ;
+            }
+            // 可以使用,去掉提示语,修改开关
+            $("span").eq(0).html("");
+            $("#status").addClass("glyphicon glyphicon-ok success");
+            f_uname = true;
           }
         })
-        return;
-      }
-      // 不符合发送请求的条件
-      // alert("用户名或密码不合法");
-      if (!f_uname) {
-        alert("用户名不合法");
-        return;
-      }
-      if (!f_upass) {
-        alert("密码不合法");
-        return;
-      }
-    })
-  </script>
-</body>
-
+        // },2000)
+      });
+      // 验证密码 6-12位
+      $("#password").on("input",function(){
+        var password = $(this).val().trim();
+        if(password==""){
+          $("span").eq(1).html("密码不能为空").css("color","red");
+          f_pass = false;
+          return ;
+        }
+        if(password.length<6 || password.length>12){
+          $("span").eq(1).html("密码长度不正确").css("color","red");
+          f_pass = false;
+          return ;
+        }
+        // 密码可以使用
+        $("span").eq(1).html(""); // 清空提示语
+        f_pass = true;
+      });
+      // 给按钮绑定单击事件,提交注册请求
+      $("button").on("click",function(){
+        if(f_uname && f_pass){
+          var username = $("#username").val();
+          var password = $("#password").val();
+          $.ajax({
+            url: "/user/regist",
+            method: "post",
+            data: {
+              username: username,
+              password: password
+            },
+            success: function(result){
+              if(result.status!=0){ // 失败
+                alert(result.msg);
+                return;
+              }
+              // 成功
+              alert(result.msg);
+              location.href = "/"; // 跳转到首页
+            }
+          })
+          return ;
+        }
+        // 不符合发送请求的条件
+        alert("用户名或密码不合法");
+       /*  if(!f_uname){
+          alert("用户名不合法")
+          return;
+        }
+        if(!f_pass){
+          alert("密码不合法")
+        } */
+      })
+    </script>
+  </body>
 </html>

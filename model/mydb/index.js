@@ -10,6 +10,7 @@ const uri = url + "/" + db;
 const opt = {
   useNewUrlParser: true,
   useUnifiedTopology: true,
+  useCreateIndex: true,
 };
 mongoose.connect(uri, opt);
 
